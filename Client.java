@@ -9,7 +9,7 @@ public class Client {
     BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
     String clientMessage="",serverMessage="";
     while(!clientMessage.equals("bye")){
-      System.out.println("Enter number :");
+      System.out.println("Enter text :");
       clientMessage=br.readLine();
       outStream.writeUTF(clientMessage);
       outStream.flush();

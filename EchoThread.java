@@ -5,6 +5,7 @@ public class EchoThread implements Runnable {
   Socket clientSock;
   int clientNu;
   int squre;
+  String stateMachine = "";
   EchoThread(Socket inSocket,int counter){
     clientSock = inSocket;
     clientNu=counter;
@@ -14,13 +15,12 @@ public class EchoThread implements Runnable {
       DataInputStream inStream = new DataInputStream(clientSock.getInputStream());
       DataOutputStream outStream = new DataOutputStream(clientSock.getOutputStream());
       String clientMSG="", serverMSG="";
-      while(!clientMSG.equals("bye")){
-        clientMSG=inStream.readUTF();
-        System.out.println("From Client-" +clientNu+ ": Number is :"+clientMSG);
-        squre = Integer.parseInt(clientMSG) * Integer.parseInt(clientMSG);
-        serverMSG="From Server to Client-" + clientNu + " Square of " + clientMSG + " is " +squre;
-        outStream.writeUTF(serverMSG);
-        outStream.flush();
+      while(!checkState(stateMachine)){
+        clientMSG=inStream.readUTF().replaceAll("[^a-zA-Z ]", "");
+        stateMachine += clientMSG.toLowerCase();
+        //System.out.println(clientMSG);
+        //squre = Integer.parseInt(clientMSG) * Integer.parseInt(clientMSG);
+        sendMSG(clientMSG.toCharArray(), outStream);
       }
       inStream.close();
       outStream.close();
@@ -36,5 +36,21 @@ public class EchoThread implements Runnable {
         currThread = new Thread(this);
         currThread.start();
       }
-   }
+  }
+  public boolean checkState(String state) {
+    return state.contains("quit");
+  }
+  public void sendMSG(char clientMSG[], DataOutputStream outStream) {
+    String charByChar = "";
+    for (char currChar: clientMSG) {
+      charByChar +=  currChar + "\n";
+    }
+    String serverMSG="From Server to Client-" + clientNu + " Here's your data baby girl: \n" + charByChar;
+    try {
+      outStream.writeUTF(serverMSG + "\nChars in sequence so far: " + stateMachine);
+      outStream.flush();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 }
