@@ -16,7 +16,7 @@ public class EchoServer
         counter++;
         Socket serverClient = server.accept();  //server accepts the client connection request
         System.out.println("Client No: " + counter + " connected");
-        EchoThread et = new EchoThread(serverClient,counter); //send the request to a separate thread
+        EchoThread et = new EchoThread(serverClient.counter); //send the request to a separate thread
         et.start();
       }
     } catch(Exception e){

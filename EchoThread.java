@@ -29,8 +29,9 @@ public class EchoThread implements Runnable
         stateMachine += clientMSG.toLowerCase(); //Add input to the state machine
         sendMSG(clientMSG.toCharArray(), outStream); //Send input back to the client
       }
-      inStream.close(); //close streams and sockets
-      outStream.close();
+      //close I/O streams and sockets
+      inStream.close(); 
+      outStream.close(); 
       clientSock.close();
     } catch(IOException e) {
       System.out.println(e);
