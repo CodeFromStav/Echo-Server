@@ -1,26 +1,36 @@
 import java.net.*;
-import java.io.*;
 
-public class EchoServer
-{
+public class EchoServer {
+    public static void main(String[] args) throws Exception {
+        try {
+            // open new ServerSocket object with port number '8080'
+            ServerSocket server = new ServerSocket(8080);
 
-  public static void main(String[] args) throws Exception
-  {
+            // counter variable for tracking the number of client connections
+            int counter = 0;
 
-    try{
-      ServerSocket server = new ServerSocket(8080);
-      int counter = 0;
-      System.out.println("Server Started ....");
-      while(true)
-      {
-        counter++;
-        Socket serverClient = server.accept();  //server accepts the client connection request
-        System.out.println("Client No: " + counter + " connected");
-        EchoThread et = new EchoThread(serverClient.counter); //send the request to a separate thread
-        et.start();
-      }
-    } catch(Exception e){
-      System.out.println(e);
+            // confirm server has started
+            System.out.println("Server started...");
+
+            // echo server runs until manually terminated by server user
+            while (true) {
+                // increment counter to account for new client connection
+                counter++;
+
+                // server accepts the client connection request
+                Socket serverClient = server.accept();
+
+                // control message for when a client connects
+                System.out.println("Client No: " + counter + " connected");
+
+                // create a new thread for new client; pass in client socket and counter number
+                EchoThread newEchoThread = new EchoThread(serverClient, counter);
+
+                // start newly created thread
+                newEchoThread.start();
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
-  }
 }
