@@ -28,20 +28,24 @@ public class EchoThread implements Runnable {
 
             // continue connection until key word 'quit' is sent by client
             while (!checkState(stateMachine)) {
-                // any character received will only be sent back, if that character is a small or capital letter of the English
-                //    alphabet
+
+                // any character received will only be sent back, if that character is a small or capital letter of
+                //      the English alphabet
                 clientMSG = fromClient.readUTF().replaceAll("[^a-zA-Z ]", ""); //read client messages
                 System.out.println("Data received");
                 stateMachine += clientMSG.toLowerCase(); //Add input to the state machine
                 sendMSG(clientMSG.toCharArray(), toClient); //Send input back to the client
             }
 
+            // control message for when the user enters the word 'quit'
+            System.out.println("Client has entered the 'quit' keyword; the connection has been closed.");
+
             // close I/O streams and sockets
             fromClient.close();
             toClient.close();
             clientSocket.close();
-        } catch (IOException e) {
-            System.out.println(e);
+        } catch (IOException ex) {
+            System.out.println(ex);
         }
         // control message for when a client closes/exits their socket
         finally {
@@ -59,6 +63,10 @@ public class EchoThread implements Runnable {
     }
 
     public boolean checkState(String state) {
+
+        // removes all spaces in the string 'state' to make it easier to look for 'quit'
+        state = state.replaceAll("\\s+","");
+
         return state.contains("quit");
     }
 
@@ -70,7 +78,7 @@ public class EchoThread implements Runnable {
             charByChar += currChar + "\n";
         }
 
-        String serverMSG = "From Server to Client " + clientNumber + " Here's your data: \n" + charByChar;
+        String serverMSG = "From Server to Client " + clientNumber + ", here's your data: \n" + charByChar;
 
         try {
             outStream.writeUTF(serverMSG + "\nChars in sequence so far: " + stateMachine);

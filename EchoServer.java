@@ -29,8 +29,8 @@ public class EchoServer {
                 // start newly created thread
                 newEchoThread.start();
             }
-        } catch (Exception e) {
-            System.out.println(e);
+        } catch (Exception ex) {
+            System.out.println("An Exception");
         }
     }
 }
