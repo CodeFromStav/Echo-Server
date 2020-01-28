@@ -1,6 +1,7 @@
 import java.net.*;
 import java.io.*;
 
+// Class to sepearate instances of server and client connections
 public class EchoThread implements Runnable {
     Thread currentThread;
     Socket clientSocket;
@@ -13,7 +14,8 @@ public class EchoThread implements Runnable {
         clientSocket = inSocket;
         clientNumber = counter;
     }
-
+    /* runnable portion of the class, opens up a connection between the client and
+    server */
     public void run() {
         try {
             // the variable holding a reference to the input stream pouring in characters from the client
@@ -24,17 +26,17 @@ public class EchoThread implements Runnable {
 
             // control message for when data streams are created
             System.out.println("Streams created");
-            String clientMSG = "", serverMSG = "";
+            String charFromClient = "", serverMSG = "";
 
             // continue connection until key word 'quit' is sent by client
             while (!checkState(stateMachine)) {
 
                 // any character received will only be sent back, if that character is a small or capital letter of
                 //      the English alphabet
-                clientMSG = fromClient.readUTF().replaceAll("[^a-zA-Z ]", ""); //read client messages
+                charFromClient = fromClient.readUTF().replaceAll("[^a-zA-Z ]", ""); //read client messages
                 System.out.println("Data received");
-                stateMachine += clientMSG.toLowerCase(); //Add input to the state machine
-                sendMSG(clientMSG.toCharArray(), toClient); //Send input back to the client
+                stateMachine += charFromClient.toLowerCase(); //Add input to the state machine
+                sendMSG(charFromClient.toCharArray(), toClient); //Send input back to the client
             }
 
             // control message for when the user enters the word 'quit'
@@ -52,7 +54,7 @@ public class EchoThread implements Runnable {
             System.out.println("Client " + clientNumber + " exited");
         }
     }
-
+    /*Creates a new thread to start a server-client connection */
     public void start() {
         if (currentThread == null) {
 
@@ -61,7 +63,7 @@ public class EchoThread implements Runnable {
             currentThread.start();
         }
     }
-
+    /* checks to see if the server has recieved the characters 'quit' to quit the connection */
     public boolean checkState(String state) {
 
         // removes all spaces in the string 'state' to make it easier to look for 'quit'
@@ -69,9 +71,9 @@ public class EchoThread implements Runnable {
 
         return state.contains("quit");
     }
-
+    /* Echo's back the message sent from the client back to the client 'char by char'*/
     public void sendMSG(char clientMSG[], DataOutputStream outStream) {
-        String charByChar = "";
+        String charByChar = ""; // builds the string as a list of chars to the client
 
         for (char currChar : clientMSG) {
             String serverMSG = "From Server to Client " + clientNumber + " " + charByChar + "\n";

@@ -1,13 +1,14 @@
 import java.net.*;
 import java.io.*;
 
+// Test class to verify server-client connection functionality
 public class Client {
 
     public static void main(String[] args) throws Exception {
 
         try {
-            Socket clientSock = new Socket("127.0.0.1", 8080);
-            DataInputStream inStream = new DataInputStream(clientSock.getInputStream());
+            Socket clientSock = new Socket("127.0.0.1", 8080); // open up connection on right port
+            DataInputStream inStream = new DataInputStream(clientSock.getInputStream()); // Setup streams for incoming and outgoing data
             DataOutputStream outStream = new DataOutputStream(clientSock.getOutputStream());
             BufferedReader buffRead = new BufferedReader(new InputStreamReader(System.in));
             String clientMessage = "", serverMessage = ""; //add text here?
@@ -35,7 +36,7 @@ public class Client {
             System.out.println("An Exception");
         }
     }
-
+    // checks the state of the client's message, if quit is found the connection is terminated
     private static boolean checkState(String state) {
 
         // removes all spaces in the string 'state' to make it easier to look for 'quit'

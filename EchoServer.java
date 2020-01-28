@@ -1,5 +1,5 @@
 import java.net.*;
-
+// server class that echos back characters from the client back to the client
 public class EchoServer {
     public static void main(String[] args) throws Exception {
         try {
