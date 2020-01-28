@@ -33,7 +33,7 @@ public class EchoThread implements Runnable {
 
                 // any character received will only be sent back, if that character is a small or capital letter of
                 //      the English alphabet
-                charFromClient = fromClient.readUTF().replaceAll("[^a-zA-Z ]", ""); //read client messages
+                charFromClient = fromClient.readUTF().replaceAll("[^a-zA-Z ]", "").replaceAll("\\s",""); //read client messages
                 System.out.println("Data received");
                 stateMachine += charFromClient.toLowerCase(); //Add input to the state machine
                 sendMSG(charFromClient.toCharArray(), toClient); //Send input back to the client
